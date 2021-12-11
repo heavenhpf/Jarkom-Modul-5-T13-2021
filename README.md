@@ -398,6 +398,21 @@ Syntax berikut untuk menyaring jam 15:01 hingga 23:59:
 
 `iptables -A INPUT -s 10.48.0.0/22 -m time --timestart 15:01 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu -j REJECT`
 
+### Tes
+ping ke google, jika sudah benar harusnya tidak bisa. Sebelum itu ubah date agar masuk ke range ditolak:
+
+![image](https://user-images.githubusercontent.com/73151823/145667525-19e1fd90-6a82-44f4-8961-d8653613fc22.png)
+
+![image](https://user-images.githubusercontent.com/73151823/145667527-d41f1afe-99a5-43bc-b15e-c7868a386d0c.png)
+
+jika masuk rangenya, maka ping berhasil
+
+![image](https://user-images.githubusercontent.com/73151823/145667540-152a2160-3469-4260-acde-0b08e56b33e6.png)
+
+![image](https://user-images.githubusercontent.com/73151823/145667543-572f1611-999b-412d-b671-d51a0fce84bd.png)
+
+jika tidak masuk rangenya, maka ping gagal
+
 ## Soal 5
 Kemudian kalian diminta untuk membatasi akses ke Doriki yang berasal dari subnet Blueno, Cipher, Elena dan Fukuro dengan beraturan sebagai berikut:
 
