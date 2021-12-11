@@ -174,15 +174,19 @@ Jalankan `iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source 192.168.122
 Kalau sudah harusnya semua sudah bisa ping google kecuali client. Kemudian, dilakukan installing package yang dibutuhkan:
 
 1. doriki:
+
 ![image](https://user-images.githubusercontent.com/72731522/145670887-84c3b045-2f91-4af2-8434-eb1d7e1c240d.png)
 
 2. jipangu:
+
 ![image](https://user-images.githubusercontent.com/72731522/145670893-706d3407-86ab-4ad7-a71b-ed034bd830b2.png)
 
 3. water7:
+
 ![image](https://user-images.githubusercontent.com/72731522/145670896-f85232b1-5091-4821-a1e5-4340f8be6e66.png)
 
 4. guanhao:
+
 ![image](https://user-images.githubusercontent.com/72731522/145670898-11e21ec4-63af-49be-a17a-1da35b291461.png)
 
 Setelah itu, dilakukan setting pada DHCP Server dan Relay.
