@@ -250,6 +250,14 @@ subnet 10.48.40.0 netmask 255.255.254.0 {
 
 " >> /etc/dhcp/dhcpd.conf
 ```
+keterangan untuk konfigurasi:
+- `range` di sini kita masukkan range IP sesuai subnetnya. misal pada subnet A2, mempunyai 700 host dengan NID 10.48.0.0 . Maka range IPnya adalah 10.48.0.2 - 10.48.2.189 . Hal ini berlaku untuk subnet lainnya
+- `option routers` diisi gateway dari subnet tersebut
+- `option broadcast-address` diisi broadcast address. didapat dari operasi OR dari ip dan (netmask')
+- `option domain-name-servers` diisi DNS server yaitu IP DORIKI (DNS Server) dan 202.46.129.2 (ns1 its)
+- `default-lease-time` diisi lama waktu DHCP server meminjamkan alamat IP kepada klien yaitu 360 detik
+- `max-lease-time` diisi waktu maksimal yang di alokasikan untuk peminjaman IP oleh DHCP server ke klien yaitu 7200 detik
+
 
 Untuk DHCP Relay ada 3, yaitu router WATER7, FOOSHA, dan GUANHAO.
 
@@ -312,11 +320,17 @@ echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p
 ```
 
-Disetting juga setiap DHCP Relay (WATER7, FOOSHA, GUANHAO) dengan ditambahkan command berikut:
+Disetting juga forwarder setiap DHCP Relay (WATER7, FOOSHA, GUANHAO) dengan ditambahkan command berikut:
 ```bash
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p
 ```
+
+Jika sudah, setiap klien seharusnya sudah mendapat IP dynamic:
+![image](https://user-images.githubusercontent.com/73151823/145667289-e29de4dd-3559-41d2-bdc4-db93c3d17069.png)
+![image](https://user-images.githubusercontent.com/73151823/145667301-5343b2f8-4bee-406d-a6f8-423cd787fb34.png)
+![image](https://user-images.githubusercontent.com/73151823/145667309-907bfc84-5df1-4046-9a46-cc5296e67118.png)
+![image](https://user-images.githubusercontent.com/73151823/145667312-99f7ff5c-75c5-427f-bc98-ac92631ab269.png)
 
 ## Soal 2
 Kalian diminta untuk mendrop semua akses HTTP dari luar Topologi kalian pada server yang merupakan DHCP Server dan DNS Server demi menjaga keamanan.
@@ -328,6 +342,15 @@ iptables -A FORWARD -d 10.48.4.0/29 -i eth0 -p tcp -m tcp --dport 80 -j DROP
 
 Menggunakan syntax `-A FORWARD` FORWARD chain untuk menyaring paket dengan syntax `-p tcp -m tcp` protokol TCP dari luar topologi menuju ke JIPANGU (DHCP server) dan DORIKI (DNS Server) (yang berada di satu subnet yang sama yaitu `-d 10.48.4.0/2`), dimana akses HTTP (yang memiliki `--dport 80 port 80`) yang masuk ke JIPANGU (DHCP server) dan DORIKI (DNS Server) melalui `-i eth0` interfaces `eth`0 dari  JIPANGU (DHCP server) danDORIKI (DNS Server) agar di DROP dengan menggunakan syntax `-j DROP`
 
+### Tes
+tes menggunakan python http server. Pada foosha, buat http server pada port 80:
+
+![image](https://user-images.githubusercontent.com/73151823/145667395-a89a033d-9ad9-467d-a2d0-1db1376d707b.png)
+
+kemudian lakukan akses pada [localhost:80](http://localhost:80) pada router lain. hasilnya akan refused
+
+![image](https://user-images.githubusercontent.com/73151823/145667402-e2bdc83e-26ca-4a21-a261-3cfbf33b48fa.png)
+
 ## Soal 3
 Karena kelompok kalian maksimal terdiri dari 3 orang. Luffy meminta kalian untuk membatasi DHCP dan DNS Server hanya boleh menerima maksimal 3 koneksi ICMP secara bersamaan menggunakan iptables, selebihnya didrop.
 ### Penyelesaian
@@ -335,8 +358,20 @@ Ditambahkan command berikut diatur pada JIPANGU (DHCP server) dan DORIKI (DNS Se
 ```bash
 iptables -A INPUT -p icmp -m connlimit --connlimit-above 3 --connlimit-mask 0 -j DROP
 ```
-
 Menggunakan command `-A INPUT` untuk menyaring paket dengan syntax `-p icmp` protokol ICMP yang masuk agar dibatasi dengan menggunakan command `-m connlimit --connlimit-above 3` hanya sebatas maksimal 3 koneksi saja,  `--connlimit-mask 0` darimana saja, sehingga selebihnya akan di DROP dengan command `-j DROP`.
+
+### Tes
+tes menggunakan ping ke ip DORIKI/JIPANGU. Ping ke jipangu saja karena doriki nanti akan direstrict aksesnya sesuai jam pada no 5. Jika benar, maka ping ke 4 tidak akan bisa.
+
+![image](https://user-images.githubusercontent.com/73151823/145667429-c8aa78e6-f410-4cf3-be7e-8dbd780ac17f.png)
+
+![image](https://user-images.githubusercontent.com/73151823/145667433-4e7c9a9f-af38-4398-aef8-07b834477bf5.png)
+
+![image](https://user-images.githubusercontent.com/73151823/145667440-58c3d770-d5ef-4e03-9854-dbeabb7e5db3.png)
+
+![image](https://user-images.githubusercontent.com/73151823/145667446-cb1bac83-a4c2-4527-95e9-d1d5dd690125.png)
+
+tidak bisa ping saat di fukurou
 
 ## Soal 4
 Kemudian kalian diminta untuk membatasi akses ke Doriki yang berasal dari subnet Blueno, Cipher, Elena dan Fukuro dengan beraturan sebagai berikut:
@@ -385,3 +420,4 @@ Di GUANHAO, ditambahkan command/syntax berikut:
 `iptables -A PREROUTING -t nat -p tcp -d 10.48.4.3 -j DNAT --to-destination 10.48.36.2`
 
 ## Kendala yang Dialami
+1. Pada setiap boot GNS3, entah kenapa harus mengulangi membuat IP baru pada foosha agar bisa berhasil (yang berarti address yang saya tulis di konfigurasi eth0 router foosha ini hanya work untuk satu sesi GNS3, kemudian tidak work ketika memulai sesi berikutnya)
