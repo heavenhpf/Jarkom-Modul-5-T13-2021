@@ -29,11 +29,11 @@ D. Tugas berikutnya adalah memberikan ip pada subnet Blueno, Cipher, Fukurou, da
 ### Penyelesaian
 Di sini, kami menggunakan metode CIDR untuk melakukan subnetting dan membagi IP yang sesuai untuk setiap subnet. Penggambaran subnetting yang kami buat kurang lebih adalah sebagai berikut:
 
-![image]()
+![image](https://user-images.githubusercontent.com/72731522/145670879-2e49df9f-fead-446f-9da2-2ce8a0e573c0.png)
 
 Kemudian dibuat tree sebagai berikut:
 
-![image]()
+![image](https://user-images.githubusercontent.com/72731522/145670881-1db218e2-97e0-4247-8bfa-1009f49692bd.png)
 
 Setelah subnetting berhasil dilakukan, langkah selanjutnya adalah melakukan routing dan konfigurasi IP dengan detailnya sebagai berikut:
 
@@ -174,16 +174,16 @@ Jalankan `iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source 192.168.122
 Kalau sudah harusnya semua sudah bisa ping google kecuali client. Kemudian, dilakukan installing package yang dibutuhkan:
 
 1. doriki:
-![image]()
+![image](https://user-images.githubusercontent.com/72731522/145670887-84c3b045-2f91-4af2-8434-eb1d7e1c240d.png)
 
 2. jipangu:
-![image]()
+![image](https://user-images.githubusercontent.com/72731522/145670893-706d3407-86ab-4ad7-a71b-ed034bd830b2.png)
 
 3. water7:
-![image]()
+![image](https://user-images.githubusercontent.com/72731522/145670896-f85232b1-5091-4821-a1e5-4340f8be6e66.png)
 
 4. guanhao:
-![image]()
+![image](https://user-images.githubusercontent.com/72731522/145670898-11e21ec4-63af-49be-a17a-1da35b291461.png)
 
 Setelah itu, dilakukan setting pada DHCP Server dan Relay.
 
